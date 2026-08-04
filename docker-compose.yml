@@ -1,0 +1,37 @@
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: proxy-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app-backend
+    networks:
+      - red-nico
+
+  servidor-bd:
+    image: mysql:latest
+    container_name: servidor-bd
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "{DB_PASSWORD}"
+      MYSQL_DATABASE: "{DB_NAME}"
+    networks:
+      - red-nico
+
+  app-backend:
+    build: ./backend
+    container_name: app-backend
+    restart: always
+    ports:
+      - "5050:5050"
+    depends_on:
+      - servidor-bd
+    networks:
+      - red-nico
+
+networks:
+  red-nico:
+    driver: bridge
