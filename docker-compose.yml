@@ -17,7 +17,7 @@ services:
 
 
   servidor-bd:
-    image: mysql:8.0
+    image: mysql:8.0-debian
     container_name: servidor-bdNico
     restart: always
     environment:
