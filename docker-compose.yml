@@ -20,6 +20,7 @@ services:
     image: mysql:8.0-debian
     container_name: servidor-bdNico
     restart: always
+    command: --performance-schema=OFF
     environment:
       MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
       MYSQL_DATABASE: "${DB_NAME}"
