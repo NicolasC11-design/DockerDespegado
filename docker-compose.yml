@@ -17,7 +17,7 @@ services:
 
 
   servidor-bd:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: servidor-bdNico
     restart: always
     environment:
