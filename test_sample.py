@@ -1,5 +1,10 @@
 import pytest
-from backend.sample_app import app  # Importa la instancia de tu aplicación Flask
+import sys
+import os
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'backend')))
+
+from backend.sample_app import app  
 
 def test_ejemploBasico():
     assert 1 + 1 == 2
