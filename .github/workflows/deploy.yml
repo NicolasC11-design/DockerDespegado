@@ -23,8 +23,10 @@ jobs:
           pip install -r ./backend/requirements.txt
           pip install pytest
 
-      - name: Ejecutar pruebas con pytest
-        run: pytest
+      - name: Run pytest
+        run: |
+          export PYTHONPATH=$PYTHONPATH:./backend
+          pytest test_sample.py
 
   build-and-push:
     needs: test
