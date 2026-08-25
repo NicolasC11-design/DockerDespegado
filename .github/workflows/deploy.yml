@@ -27,6 +27,7 @@ jobs:
         run: pytest
 
   build-and-push:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
