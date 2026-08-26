@@ -1,6 +1,6 @@
 FROM python
 WORKDIR /home/myapp
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install -r requirements.txt 
 COPY . .
 EXPOSE 5050
