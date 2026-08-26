@@ -75,3 +75,4 @@ jobs:
               cd ~/DockerDespegado
               docker compose pull app-backend
               docker compose up -d
+              

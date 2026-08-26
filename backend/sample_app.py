@@ -5,11 +5,12 @@ from flask import Flask, render_template, request, redirect, url_for
 sample = Flask(__name__)
 
 DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'servidor-bdNico'),
-    'user': os.getenv('DB_USER', 'root'),
-    'passwd': os.getenv('DB_PASSWORD', '1234'),
-    'database': os.getenv('DB_NAME', 'adso_db')
+    "host": os.getenv("DB_HOST", "servidor-bdNico"),
+    "user": os.getenv("DB_USER", "root"),
+    "passwd": os.getenv("DB_PASSWORD", "1234"),
+    "database": os.getenv("DB_NAME", "adso_db"),
 }
+
 
 def get_db_connection():
     conn = pymysql.connect(**DB_CONFIG, autocommit=True)
@@ -27,7 +28,8 @@ def get_db_connection():
     cursor.close()
     return conn
 
-@sample.route('/', methods=['GET'])
+
+@sample.route("/", methods=["GET"])
 def home():
     try:
         conn = get_db_connection()
@@ -41,13 +43,14 @@ def home():
         aprendices = []
         db_status = f"Error de conexión: {e}"
 
-    return render_template('index.html', aprendices=aprendices, db_status=db_status)
+    return render_template("index.html", aprendices=aprendices, db_status=db_status)
 
-@sample.route('/registrar', methods=['POST'])
+
+@sample.route("/registrar", methods=["POST"])
 def registrar():
-    nombre = request.form.get('nombre_completo')
-    documento = request.form.get('numero_documento')
-    ficha = request.form.get('ficha')
+    nombre = request.form.get("nombre_completo")
+    documento = request.form.get("numero_documento")
+    ficha = request.form.get("ficha")
 
     if nombre and documento and ficha:
         try:
@@ -60,7 +63,8 @@ def registrar():
         except Exception as e:
             print(f"Error al registrar: {e}")
 
-    return redirect(url_for('home'))
+    return redirect(url_for("home"))
 
-if __name__ == '__main__':
-    sample.run(host='0.0.0.0', port=5050, debug=False) # nosec B101
+
+if __name__ == "__main__":
+    sample.run(host="0.0.0.0", port=5050, debug=False)  # nosec B104
