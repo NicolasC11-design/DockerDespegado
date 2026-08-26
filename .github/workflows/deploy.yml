@@ -31,7 +31,7 @@ jobs:
           pytest 
 
   build-and-push:
-    needs: test-security
+    needs: test-and-security
     runs-on: ubuntu-latest
     steps:
       - name: Descargar codigo
