@@ -1,4 +1,7 @@
 FROM python
+
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt-get/lists/*
+
 WORKDIR /home/myapp
 COPY backend/requirements.txt .
 RUN pip install -r requirements.txt 
