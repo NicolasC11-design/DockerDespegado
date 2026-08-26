@@ -17,4 +17,4 @@ def client():
 
 def test_home_route_returns_200(client):
     response = client.get('/')
-    assert response.status_code == 404
+    assert response.status_code == 200 #nosec B101
