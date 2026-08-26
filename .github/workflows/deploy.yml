@@ -2,33 +2,33 @@ name: Publicar Imagen en Docker Hub
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-
-  test:
+  test-and-security:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar codigo
+      - name: Descargar código
         uses: actions/checkout@v4
-      
-      - name: Configurar Python
+        
+      - name: Configurar python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
+        
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
           pip install -r ./backend/requirements.txt
           pip install pytest bandit
+        
       - name: Escaneo de seguridad (bandit)
-        run: bandit -r . -s B101 
+        run: bandit -r . -s B101 # Ignorar los archivos test
 
-      - name: Run pytest
+      - name: Ejecutar pruebas pytest
         run: |
           export PYTHONPATH=$PYTHONPATH:./backend
-          pytest 
+          pytest
 
   build-and-push:
     needs: test-and-security
@@ -36,8 +36,8 @@ jobs:
     steps:
       - name: Descargar codigo
         uses: actions/checkout@v4
-
-      - name: Iniciar sesion en Docker Hub
+        
+      - name: Iniciar sesión en docker hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -46,31 +46,32 @@ jobs:
       - name: Construir imagen
         uses: docker/build-push-action@v4
         with:
-          context: . 
+          context: .
           push: false
           load: true
           no-cache: true
-          tags:  jonicribe1101/mi-api:latest
-
+          tags: jonicribe1101/mi-api:latest
+        
       - name: Escanear contenedor con trivy
         uses: aquasecurity/trivy-action@master
         with: 
-          image-ref: 'jonicribe1101/mi-api:latest' 
+          image-ref: 'jonicribe1101/mi-api:latest'
           format: 'table'
-          exit-code: '1'
+          exit-code: '1' # Si encuentra alguna falla, rompe la ejecución
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
-
+          severity: 'CRITICAL,HIGH' # Son los que van a detener la ejecución
+        
       - name: Subir la imagen a Docker Hub
-        run: docker push jonicribe1101/mi-api:latest 
-
-      - name: Deplegar en servidor cloud
+        run: docker push jonicribe1101/mi-api:latest
+        
+      - name: Desplegar en servidor cloud
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            cd ~/DockerDespegado
-            docker compose pull app-backend
+              cd ~/DockerDespegado
+              docker compose pull app-backend
+              docker compose up -d
