@@ -1,3 +1,5 @@
 venv/
 .env
-sample-app.sh
+sample-app.shnpm_data/
+npm_letsencrypt/
+npm_data/
